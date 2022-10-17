@@ -10,11 +10,11 @@ const { NotImplementedError } = require('../extensions/index.js');
  * @return {Array<Array>}
  *
  * @example
- * matrix = [
- *  [true, false, false],
- *  [false, true, false],
- *  [false, false, false]
- * ]
+//  * matrix1 = [
+//  *  [true, false, false],
+//  *  [false, true, false],
+//  *  [false, false, false]
+//  * ]
  *
  * The result should be following:
  * [
@@ -23,11 +23,48 @@ const { NotImplementedError } = require('../extensions/index.js');
  *  [1, 1, 1]
  * ]
  */
-function minesweeper(/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+function minesweeper(matrix) {
+	const minesMatrix = matrix.map((line) =>
+		line.map((cell) => (cell === true ? 1 : 0))
+	);
+
+	const cols = minesMatrix[0].length;
+	const rows = minesMatrix.length;
+	const m = [];
+
+	for (let i = 0; i < rows; i++) {
+		m[i] = [];
+		for (let j = 0; j < cols; j++) {
+			if (minesMatrix[i][j] === 1) {
+				m[i][j] = 1;
+			} else {
+				m[i][j] = 0;
+
+        // top left
+				if (i > 0 && j > 0)               m[i][j] += minesMatrix[i - 1][j - 1];
+        // top center
+				if (i > 0)                        m[i][j] += minesMatrix[i - 1][j];
+        // top right
+				if (i > 0 && j < cols - 1)        m[i][j] += minesMatrix[i - 1][j + 1];
+
+        // left
+				if (j > 0)                        m[i][j] += minesMatrix[i][j - 1];
+        // right
+				if (j < cols - 1)                 m[i][j] += minesMatrix[i][j + 1];
+
+        // bottom left
+				if (i < rows - 1 && j > 0)        m[i][j] += minesMatrix[i + 1][j - 1];
+        // bottom center
+				if (i < rows - 1)                 m[i][j] += minesMatrix[i + 1][j];
+        // bottom right
+				if (i < rows - 1 && j < cols - 1) m[i][j] += minesMatrix[i + 1][j + 1];
+			}
+		}
+	}
+
+  return m;
 }
 
 module.exports = {
-  minesweeper
+	minesweeper,
 };
